@@ -1,1407 +1,1699 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Arkbridge 360 Membership</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arkbridge 360 Membership</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<style>
-*{box-sizing:border-box}
+  <style>
+    :root {
+      --orange: #e85d04;
+      --orange-dark: #c94d00;
+      --black: #111111;
+      --white: #ffffff;
+      --light: #f5f5f5;
+      --border: #dddddd;
+      --green: #16803c;
+      --red: #c62828;
+      --shadow: 0 8px 25px rgba(0,0,0,.10);
+    }
 
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background:#f4f7fb;
-  color:#152033
-}
+    * {
+      box-sizing: border-box;
+    }
 
-button,input{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f4f6;
+      color: var(--black);
+    }
 
-.login{
-  min-height:100vh;
-  display:grid;
-  place-items:center;
-  padding:20px;
-  background:linear-gradient(145deg,#102a43,#1f6f8b)
-}
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
 
-.card{
-  background:#fff;
-  border-radius:20px;
-  box-shadow:0 14px 45px #0003;
-  padding:24px;
-  width:min(430px,100%)
-}
+    .hidden {
+      display: none !important;
+    }
 
-.brand{
-  font-weight:800;
-  font-size:24px
-}
+    /* LOGIN */
 
-.muted{color:#6b7280}
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #111111 0%, #222222 55%, #e85d04 100%);
+    }
 
-.field{margin:14px 0}
+    .login-box {
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+    }
 
-.field label{
-  display:block;
-  font-weight:650;
-  margin-bottom:7px
-}
+    .brand-logo {
+      text-align: center;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
 
-.field input{
-  width:100%;
-  padding:13px;
-  border:1px solid #d6dce5;
-  border-radius:10px
-}
+    .brand-ab,
+    .brand-gtl {
+      color: #111;
+      background: #fff;
+    }
 
-.primary{
-  width:100%;
-  padding:13px;
-  border:0;
-  border-radius:10px;
-  background:#126782;
-  color:white;
-  font-weight:750
-}
+    .brand-360 {
+      color: var(--orange);
+    }
 
-.primary:disabled{
-  opacity:.6;
-  cursor:not-allowed
-}
+    .brand-title {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 25px;
+    }
 
-.error{
-  color:#b42318;
-  background:#fff0f0;
-  padding:10px;
-  border-radius:9px;
-  margin:12px 0
-}
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
 
-.success{
-  color:#176b3a;
-  background:#eefbf3;
-  padding:15px;
-  border-radius:12px;
-  margin-top:16px
-}
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 9px;
+      padding: 12px;
+      outline: none;
+      background: white;
+    }
 
-.numberBox{
-  background:#fff;
-  border:1px solid #dbe5ea;
-  border-radius:12px;
-  padding:14px;
-  margin:10px 0
-}
+    input:focus,
+    textarea:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(232,93,4,.12);
+    }
 
-.numberBox span{
-  display:block;
-  color:#6b7280;
-  font-size:13px;
-  margin-bottom:5px
-}
+    .form-group {
+      margin-bottom: 16px;
+    }
 
-.numberBox strong{
-  display:block;
-  font-size:20px;
-  letter-spacing:.5px
-}
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: 700;
+    }
 
-.shell{
-  display:flex;
-  min-height:100vh
-}
+    .btn-primary {
+      background: var(--orange);
+      color: white;
+    }
 
-.side{
-  width:240px;
-  background:#102a43;
-  color:#fff;
-  padding:20px;
-  position:fixed;
-  inset:0 auto 0 0
-}
+    .btn-primary:hover {
+      background: var(--orange-dark);
+    }
 
-.side .brand{
-  margin-bottom:25px
-}
+    .btn-dark {
+      background: #111;
+      color: white;
+    }
 
-.nav button{
-  display:block;
-  width:100%;
-  text-align:left;
-  background:none;
-  border:0;
-  color:#dbeafe;
-  padding:12px;
-  border-radius:9px;
-  margin:3px 0
-}
+    .btn-light {
+      background: #eee;
+      color: #111;
+    }
 
-.nav button.active,
-.nav button:hover{
-  background:#ffffff18;
-  color:#fff
-}
+    .btn-danger {
+      background: var(--red);
+      color: white;
+    }
 
-.main{
-  margin-left:240px;
-  width:calc(100% - 240px);
-  padding:22px
-}
+    .full {
+      width: 100%;
+    }
 
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:18px
-}
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
 
-.logout{
-  border:1px solid #d6dce5;
-  background:#fff;
-  padding:9px 12px;
-  border-radius:9px
-}
+    .message.error {
+      display: block;
+      background: #ffe8e8;
+      color: #a00000;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:14px
-}
+    .message.success {
+      display: block;
+      background: #e7f8ed;
+      color: #11652e;
+    }
 
-.stat{
-  background:#fff;
-  padding:18px;
-  border-radius:15px;
-  box-shadow:0 3px 12px #0000000b
-}
+    /* APP */
 
-.stat b{
-  font-size:27px;
-  display:block;
-  margin-top:6px
-}
+    #appScreen {
+      min-height: 100vh;
+    }
 
-.panel{
-  background:#fff;
-  border-radius:15px;
-  padding:18px;
-  margin-top:16px;
-  box-shadow:0 3px 12px #0000000b
-}
+    .topbar {
+      background: white;
+      border-bottom: 1px solid #ddd;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
 
-.search{
-  display:flex;
-  gap:9px;
-  margin-bottom:14px
-}
+    .topbar-brand {
+      font-weight: 900;
+      font-size: 22px;
+    }
 
-.search input{
-  flex:1;
-  padding:11px;
-  border:1px solid #d6dce5;
-  border-radius:9px
-}
+    .menu-btn {
+      display: none;
+      background: #111;
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      padding: 9px 12px;
+    }
 
-.tablewrap{
-  overflow:auto
-}
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 62px);
+    }
 
-.table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:600px
-}
+    .sidebar {
+      width: 235px;
+      background: #111;
+      color: white;
+      padding: 18px 12px;
+      flex-shrink: 0;
+    }
 
-.table th,
-.table td{
-  text-align:left;
-  padding:11px;
-  border-bottom:1px solid #edf0f4
-}
+    .nav-btn {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: white;
+      text-align: left;
+      padding: 13px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      font-weight: 700;
+    }
 
-.pill{
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:999px;
-  background:#edf6f8
-}
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: var(--orange);
+    }
 
-.toast{
-  position:fixed;
-  bottom:18px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#152033;
-  color:#fff;
-  padding:12px 16px;
-  border-radius:10px;
-  z-index:10;
-  max-width:90%
-}
+    .main {
+      flex: 1;
+      padding: 22px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
-@media(max-width:760px){
+    .page-title {
+      font-size: 28px;
+      margin: 0 0 6px;
+    }
 
-  .side{
-    width:76px;
-    padding:12px 8px
-  }
+    .page-subtitle {
+      color: #666;
+      margin-top: 0;
+    }
 
-  .side .brand span,
-  .nav button span{
-    display:none
-  }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
 
-  .nav button{
-    text-align:center;
-    font-size:20px
-  }
+    .stat-card {
+      background: white;
+      border-radius: 13px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
 
-  .main{
-    margin-left:76px;
-    width:calc(100% - 76px);
-    padding:14px
-  }
+    .stat-number {
+      font-size: 30px;
+      font-weight: 900;
+      color: var(--orange);
+    }
 
-  .grid{
-    grid-template-columns:repeat(2,1fr)
-  }
+    .panel {
+      background: white;
+      border-radius: 13px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
 
-  .top h2{
-    font-size:20px
-  }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 15px;
+    }
 
-  .card{
-    padding:20px
-  }
-}
+    .form-grid .full-width {
+      grid-column: 1 / -1;
+    }
 
-@media(max-width:420px){
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
 
-  .grid{
-    grid-template-columns:1fr
-  }
+    .notice {
+      padding: 12px 14px;
+      background: #fff3e8;
+      border-left: 4px solid var(--orange);
+      border-radius: 6px;
+      margin-bottom: 15px;
+    }
 
-  .main{
-    padding:10px
-  }
+    /* TABLE */
 
-  .search{
-    flex-direction:column
-  }
+    .table-wrap {
+      overflow-x: auto;
+    }
 
-  .search button{
-    width:100%!important
-  }
-}
-</style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid #eee;
+      padding: 11px;
+      text-align: left;
+    }
+
+    th {
+      background: #f7f7f7;
+    }
+
+    /* ID CARD */
+
+    .card-area {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0 25px;
+    }
+
+    .member-id-card {
+      width: 700px;
+      max-width: 100%;
+      min-height: 430px;
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(0,0,0,.18);
+      border: 2px solid #111;
+      position: relative;
+    }
+
+    .card-top {
+      height: 90px;
+      background: white;
+      border-bottom: 7px solid var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 22px;
+    }
+
+    .card-brand {
+      font-size: 35px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .card-brand .ab,
+    .card-brand .gtl {
+      color: #111;
+    }
+
+    .card-brand .three-sixty {
+      color: var(--orange);
+    }
+
+    .card-heading {
+      text-align: right;
+    }
+
+    .card-heading-main {
+      font-weight: 900;
+      font-size: 19px;
+    }
+
+    .card-heading-small {
+      color: #555;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .card-body {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 25px;
+      padding: 25px;
+    }
+
+    .photo-box {
+      width: 170px;
+      height: 170px;
+      border: 3px solid #111;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #777;
+      font-weight: 700;
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .member-details {
+      display: grid;
+      gap: 10px;
+    }
+
+    .detail-row {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 7px;
+    }
+
+    .detail-label {
+      color: #777;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .detail-value {
+      font-size: 16px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .status-active {
+      display: inline-block;
+      background: #16803c;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .card-footer {
+      border-top: 1px solid #ddd;
+      padding: 14px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: #555;
+    }
+
+    .card-watermark {
+      font-size: 10px;
+      color: #999;
+    }
+
+    /* SUCCESS */
+
+    .success-box {
+      background: #effaf2;
+      border: 1px solid #bde5c7;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .success-title {
+      color: #147333;
+      font-size: 20px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .success-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+
+    .success-item {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .success-label {
+      font-size: 11px;
+      color: #777;
+      text-transform: uppercase;
+    }
+
+    .success-value {
+      font-weight: 800;
+      margin-top: 3px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 800px) {
+      .menu-btn {
+        display: block;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: -250px;
+        top: 62px;
+        bottom: 0;
+        z-index: 30;
+        transition: left .2s ease;
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .main {
+        padding: 15px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid .full-width {
+        grid-column: auto;
+      }
+
+      .card-body {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-box {
+        margin: auto;
+      }
+
+      .card-heading {
+        text-align: left;
+      }
+
+      .card-top {
+        height: auto;
+        gap: 10px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .success-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #printCard,
+      #printCard * {
+        visibility: visible;
+      }
+
+      #printCard {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+
+      .member-id-card {
+        box-shadow: none;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="root"></div>
-<div id="toast" class="toast hidden"></div>
+  <!-- LOGIN -->
+  <section id="loginScreen">
+    <div class="login-box">
+      <div class="brand-logo">
+        <span class="brand-ab">AB</span><span class="brand-360">360</span><span class="brand-gtl">GTL</span>
+      </div>
 
-<script>
+      <div class="brand-title">Arkbridge 360 Membership</div>
 
-const SUPABASE_URL =
-  'https://ijcipmdvzhpfzmublwky.supabase.co';
-
-const SUPABASE_KEY =
-  'sb_publishable_7vJ5i4UwsVR-fU3HWjVapg_YQ53B8HB';
-
-const client = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY,
-  {
-    auth:{
-      persistSession:true,
-      autoRefreshToken:true,
-      detectSessionInUrl:true
-    }
-  }
-);
-
-let currentPage = 'dashboard';
-
-const esc = v =>
-  String(v ?? '').replace(/[&<>'"]/g,c=>({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    "'":'&#39;',
-    '"':'&quot;'
-  }[c]));
-
-function toast(message){
-
-  const t = document.getElementById('toast');
-
-  t.textContent = message;
-
-  t.classList.remove('hidden');
-
-  setTimeout(
-    ()=>t.classList.add('hidden'),
-    3000
-  );
-}
-
-
-/* =========================
-   LOGIN
-========================= */
-
-function login(){
-
-  const root = document.getElementById('root');
-
-  root.innerHTML = `
-
-    <div class="login">
-
-      <div class="card">
-
-        <div class="brand">
-          Arkbridge 360
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" type="email" required autocomplete="username" />
         </div>
 
-        <p class="muted">
-          Membership & Staff Management
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" required autocomplete="current-password" />
+        </div>
+
+        <button class="btn btn-primary full" type="submit">
+          Sign In
+        </button>
+
+        <div id="loginMessage" class="message"></div>
+      </form>
+    </div>
+  </section>
+
+
+  <!-- APP -->
+  <section id="appScreen" class="hidden">
+
+    <header class="topbar">
+      <div class="topbar-brand">
+        <span class="brand-ab">AB</span><span class="brand-360">360</span><span class="brand-gtl">GTL</span>
+        &nbsp; Membership
+      </div>
+
+      <div>
+        <button id="menuBtn" class="menu-btn" type="button">☰ Menu</button>
+        <button id="logoutBtn" class="btn btn-dark" type="button">Logout</button>
+      </div>
+    </header>
+
+    <div class="layout">
+
+      <aside id="sidebar" class="sidebar">
+        <button class="nav-btn active" data-page="dashboard">🏠 Dashboard</button>
+        <button class="nav-btn" data-page="members">👥 Members</button>
+        <button class="nav-btn" data-page="addMember">➕ Add Member</button>
+        <button class="nav-btn" data-page="cards">💳 Member Cards</button>
+        <button class="nav-btn" data-page="staff">👔 Staff</button>
+        <button class="nav-btn" data-page="verify">🔎 Verify</button>
+        <button class="nav-btn" data-page="audit">📋 Audit</button>
+      </aside>
+
+      <main id="main" class="main"></main>
+
+    </div>
+  </section>
+
+
+  <script>
+    const SUPABASE_URL = "https://ijcipmdvzhpfzmublwky.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_7vJ5i4UwsVR-fU3HWjVapg_YQ53B8HB";
+
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    let currentPage = "dashboard";
+    let latestCreatedMember = null;
+    let latestPhotoDataUrl = null;
+
+    const main = document.getElementById("main");
+    const loginScreen = document.getElementById("loginScreen");
+    const appScreen = document.getElementById("appScreen");
+    const sidebar = document.getElementById("sidebar");
+
+
+    /* -----------------------------
+       BASIC HELPERS
+    ----------------------------- */
+
+    function escapeHtml(value) {
+      if (value === null || value === undefined) return "";
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function showMessage(element, text, type) {
+      element.className = "message " + type;
+      element.textContent = text;
+    }
+
+    async function rpc(functionName, args = {}) {
+      const { data, error } = await client.rpc(functionName, args);
+
+      if (error) {
+        throw new Error(error.message || "Database request failed.");
+      }
+
+      return data;
+    }
+
+
+    /* -----------------------------
+       AUTH
+    ----------------------------- */
+
+    async function checkSession() {
+      const { data } = await client.auth.getSession();
+
+      if (data.session) {
+        showApp();
+      } else {
+        showLogin();
+      }
+    }
+
+    function showLogin() {
+      loginScreen.classList.remove("hidden");
+      appScreen.classList.add("hidden");
+    }
+
+    function showApp() {
+      loginScreen.classList.add("hidden");
+      appScreen.classList.remove("hidden");
+      renderPage("dashboard");
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      const message = document.getElementById("loginMessage");
+      message.className = "message";
+      message.textContent = "";
+
+      try {
+        const { error } = await client.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        showApp();
+
+      } catch (error) {
+        showMessage(
+          message,
+          error.message || "Login failed.",
+          "error"
+        );
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async function() {
+      await client.auth.signOut();
+      showLogin();
+    });
+
+
+    /* -----------------------------
+       NAVIGATION
+    ----------------------------- */
+
+    document.querySelectorAll(".nav-btn").forEach(button => {
+      button.addEventListener("click", function() {
+        const page = this.dataset.page;
+        renderPage(page);
+        sidebar.classList.remove("open");
+      });
+    });
+
+    document.getElementById("menuBtn").addEventListener("click", function() {
+      sidebar.classList.toggle("open");
+    });
+
+    function setActiveNav(page) {
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.page === page);
+      });
+    }
+
+    function renderPage(page) {
+      currentPage = page;
+      setActiveNav(page);
+
+      if (page === "dashboard") renderDashboard();
+      if (page === "members") renderMembers();
+      if (page === "addMember") renderAddMember();
+      if (page === "cards") renderCards();
+      if (page === "staff") renderStaff();
+      if (page === "verify") renderVerify();
+      if (page === "audit") renderAudit();
+    }
+
+
+    /* -----------------------------
+       DASHBOARD
+    ----------------------------- */
+
+    function renderDashboard() {
+      main.innerHTML = `
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">
+          Arkbridge 360 Membership Management
         </p>
 
-        <div id="loginErr"></div>
+        <div class="cards-grid">
+          <div class="stat-card">
+            <div class="stat-number">AB<span style="color:#e85d04">360</span>GTL</div>
+            <div>Membership System</div>
+          </div>
 
-        <form id="loginForm">
+          <div class="stat-card">
+            <div class="stat-number">✓</div>
+            <div>Member Registration Active</div>
+          </div>
 
-          <div class="field">
+          <div class="stat-card">
+            <div class="stat-number">ID</div>
+            <div>Membership Card System</div>
+          </div>
+        </div>
 
-            <label>Email</label>
+        <div class="panel">
+          <h2>Arkbridge 360 Membership</h2>
+          <p>
+            Register members, automatically generate membership numbers,
+            issue membership card numbers and prepare member ID cards.
+          </p>
 
-            <input
-              id="email"
-              type="email"
-              autocomplete="username"
-              required
-            >
+          <button class="btn btn-primary"
+                  onclick="renderPage('addMember')">
+            Add New Member
+          </button>
+        </div>
+      `;
+    }
+
+
+    /* -----------------------------
+       MEMBERS
+    ----------------------------- */
+
+    async function renderMembers() {
+      main.innerHTML = `
+        <h1 class="page-title">Members</h1>
+        <p class="page-subtitle">Registered Arkbridge 360 members</p>
+
+        <div class="panel">
+          <div id="membersStatus">Loading members...</div>
+          <div id="membersTable"></div>
+        </div>
+      `;
+
+      try {
+        const { data, error } = await client
+          .from("members")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        const status = document.getElementById("membersStatus");
+
+        if (!data || data.length === 0) {
+          status.textContent = "No members found.";
+          return;
+        }
+
+        status.textContent = data.length + " member(s) found.";
+
+        document.getElementById("membersTable").innerHTML = `
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Membership Number</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${data.map(member => `
+                  <tr>
+                    <td>
+                      ${escapeHtml(
+                        [
+                          member.first_name,
+                          member.middle_name,
+                          member.last_name
+                        ].filter(Boolean).join(" ")
+                      )}
+                    </td>
+
+                    <td>${escapeHtml(member.membership_number)}</td>
+                    <td>${escapeHtml(member.email || "")}</td>
+                    <td>${escapeHtml(member.phone || "")}</td>
+
+                    <td>
+                      <span class="status-active">
+                        ${escapeHtml(member.status || "active")}
+                      </span>
+                    </td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+      } catch (error) {
+        document.getElementById("membersStatus").innerHTML = `
+          <div class="message error" style="display:block">
+            Could not load members.<br>
+            ${escapeHtml(error.message)}
+          </div>
+        `;
+      }
+    }
+
+
+    /* -----------------------------
+       PHOTO VALIDATION
+    ----------------------------- */
+
+    function validatePassportPhoto(file) {
+      return new Promise((resolve, reject) => {
+
+        if (!file) {
+          reject(new Error("Please select a passport photo."));
+          return;
+        }
+
+        if (file.type !== "image/jpeg") {
+          reject(new Error("Passport photo must be a JPEG/JPG file."));
+          return;
+        }
+
+        const maxSize = 5 * 1024 * 1024;
+
+        if (file.size > maxSize) {
+          reject(new Error("Passport photo must not be larger than 5 MB."));
+          return;
+        }
+
+        const image = new Image();
+
+        image.onload = function() {
+          if (image.width !== 300 || image.height !== 300) {
+            reject(
+              new Error(
+                "Passport photo must be exactly 300 × 300 pixels."
+              )
+            );
+            return;
+          }
+
+          resolve(image);
+        };
+
+        image.onerror = function() {
+          reject(new Error("The selected photo could not be read."));
+        };
+
+        image.src = URL.createObjectURL(file);
+      });
+    }
+
+
+    /* -----------------------------
+       ADD MEMBER
+    ----------------------------- */
+
+    function renderAddMember() {
+      latestPhotoDataUrl = null;
+
+      main.innerHTML = `
+        <h1 class="page-title">Add Member</h1>
+
+        <p class="page-subtitle">
+          Register a new Arkbridge 360 member.
+        </p>
+
+        <div class="notice">
+          <strong>Membership number and card number are generated automatically.</strong>
+          You do not need to enter them.
+        </div>
+
+        <div class="panel">
+
+          <form id="memberForm">
+
+            <div class="form-grid">
+
+              <div class="form-group">
+                <label for="first_name">First Name *</label>
+                <input id="first_name" required />
+              </div>
+
+              <div class="form-group">
+                <label for="last_name">Last Name *</label>
+                <input id="last_name" required />
+              </div>
+
+              <div class="form-group">
+                <label for="middle_name">Middle Name</label>
+                <input id="middle_name" />
+              </div>
+
+              <div class="form-group">
+                <label for="member_email">Email</label>
+                <input id="member_email" type="email" />
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Phone</label>
+                <input id="phone" />
+              </div>
+
+              <div class="form-group">
+                <label for="date_of_birth">Date of Birth</label>
+                <input id="date_of_birth" type="date" />
+              </div>
+
+              <div class="form-group full-width">
+                <label for="address">Address</label>
+                <textarea id="address" rows="3"></textarea>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="memberPhoto">
+                  Passport Photo *
+                </label>
+
+                <input
+                  id="memberPhoto"
+                  type="file"
+                  accept=".jpg,.jpeg,image/jpeg"
+                  required
+                />
+
+                <small>
+                  JPEG/JPG only • Exactly 300 × 300 pixels • Maximum 5 MB
+                </small>
+
+                <div id="photoMessage" class="message"></div>
+
+                <div
+                  id="photoPreview"
+                  style="
+                    display:none;
+                    margin-top:12px;
+                    width:150px;
+                    height:150px;
+                    border:2px solid #111;
+                    border-radius:8px;
+                    overflow:hidden;
+                  "
+                >
+                  <img
+                    id="photoPreviewImage"
+                    style="width:100%;height:100%;object-fit:cover;"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="notes">Notes</label>
+                <textarea id="notes" rows="3"></textarea>
+              </div>
+
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-primary" type="submit">
+                Create Member & Issue Card
+              </button>
+
+              <button
+                class="btn btn-light"
+                type="button"
+                onclick="renderPage('dashboard')"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <div id="memberMessage" class="message"></div>
+
+          </form>
+
+        </div>
+
+        <div id="createdResult"></div>
+      `;
+
+      document
+        .getElementById("memberPhoto")
+        .addEventListener("change", handlePhotoSelection);
+
+      document
+        .getElementById("memberForm")
+        .addEventListener("submit", createMember);
+    }
+
+
+    async function handlePhotoSelection(event) {
+      const file = event.target.files[0];
+      const message = document.getElementById("photoMessage");
+      const preview = document.getElementById("photoPreview");
+      const previewImage = document.getElementById("photoPreviewImage");
+
+      message.className = "message";
+      message.textContent = "";
+      preview.style.display = "none";
+      latestPhotoDataUrl = null;
+
+      try {
+        await validatePassportPhoto(file);
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+          latestPhotoDataUrl = e.target.result;
+          previewImage.src = latestPhotoDataUrl;
+          preview.style.display = "block";
+
+          showMessage(
+            message,
+            "Passport photo accepted: 300 × 300 JPEG.",
+            "success"
+          );
+        };
+
+        reader.readAsDataURL(file);
+
+      } catch (error) {
+        event.target.value = "";
+
+        showMessage(
+          message,
+          error.message,
+          "error"
+        );
+      }
+    }
+
+
+    async function createMember(event) {
+      event.preventDefault();
+
+      const message = document.getElementById("memberMessage");
+
+      message.className = "message";
+      message.textContent = "";
+
+      try {
+
+        if (!latestPhotoDataUrl) {
+          throw new Error(
+            "Please select a valid 300 × 300 JPEG passport photo before saving."
+          );
+        }
+
+        const args = {
+          p_membership_number: null,
+
+          p_first_name:
+            document.getElementById("first_name").value.trim(),
+
+          p_last_name:
+            document.getElementById("last_name").value.trim(),
+
+          p_middle_name:
+            document.getElementById("middle_name").value.trim() || null,
+
+          p_email:
+            document.getElementById("member_email").value.trim() || null,
+
+          p_phone:
+            document.getElementById("phone").value.trim() || null,
+
+          p_date_of_birth:
+            document.getElementById("date_of_birth").value || null,
+
+          p_address:
+            document.getElementById("address").value.trim() || null,
+
+          p_photo_url:
+            latestPhotoDataUrl,
+
+          p_joined_at: null,
+
+          p_notes:
+            document.getElementById("notes").value.trim() || null,
+
+          p_card_number: null,
+
+          p_issue_date: null,
+
+          p_expiry_date: null,
+
+          p_card_photo_url:
+            latestPhotoDataUrl,
+
+          p_card_data: {
+            photo_format: "jpeg",
+            photo_width: 300,
+            photo_height: 300,
+            photo_max_size_mb: 5
+          }
+        };
+
+        const result = await rpc(
+          "create_member_and_issue_card",
+          args
+        );
+
+        latestCreatedMember = result;
+
+        showMessage(
+          message,
+          "Member created successfully.",
+          "success"
+        );
+
+        showCreatedMember(result);
+
+      } catch (error) {
+
+        showMessage(
+          message,
+          "Member could not be created. " + error.message,
+          "error"
+        );
+      }
+    }
+
+
+    /* -----------------------------
+       CREATED MEMBER + CARD
+    ----------------------------- */
+
+    function showCreatedMember(result) {
+      const member = result?.member || {};
+      const card = result?.card || {};
+
+      const fullName = [
+        member.first_name,
+        member.middle_name,
+        member.last_name
+      ].filter(Boolean).join(" ");
+
+      document.getElementById("createdResult").innerHTML = `
+
+        <div class="success-box">
+
+          <div class="success-title">
+            ✓ Member Created Successfully
+          </div>
+
+          <p>
+            The member has been registered and a membership card has been issued.
+          </p>
+
+          <div class="success-grid">
+
+            <div class="success-item">
+              <div class="success-label">Member Name</div>
+              <div class="success-value">
+                ${escapeHtml(fullName)}
+              </div>
+            </div>
+
+            <div class="success-item">
+              <div class="success-label">Membership Number</div>
+              <div class="success-value">
+                ${escapeHtml(member.membership_number)}
+              </div>
+            </div>
+
+            <div class="success-item">
+              <div class="success-label">Card Number</div>
+              <div class="success-value">
+                ${escapeHtml(card.card_number)}
+              </div>
+            </div>
+
+            <div class="success-item">
+              <div class="success-label">Member Status</div>
+              <div class="success-value">
+                ${escapeHtml(member.status || "active")}
+              </div>
+            </div>
 
           </div>
 
-          <div class="field">
+        </div>
 
-            <label>Password</label>
+        <div class="panel">
+
+          <h2>Member ID Card</h2>
+
+          <div class="card-area" id="printCard">
+
+            <div class="member-id-card">
+
+              <div class="card-top">
+
+                <div class="card-brand">
+                  <span class="ab">AB</span><span class="three-sixty">360</span><span class="gtl">GTL</span>
+                </div>
+
+                <div class="card-heading">
+                  <div class="card-heading-main">
+                    Arkbridge 360 Membership
+                  </div>
+
+                  <div class="card-heading-small">
+                    MEMBER IDENTIFICATION CARD
+                  </div>
+                </div>
+
+              </div>
+
+
+              <div class="card-body">
+
+                <div>
+
+                  <div class="photo-box">
+                    <img
+                      src="${latestPhotoDataUrl || ""}"
+                      style="${latestPhotoDataUrl ? "display:block;" : "display:none;"}"
+                    />
+
+                    ${
+                      latestPhotoDataUrl
+                        ? ""
+                        : "PASSPORT PHOTO"
+                    }
+                  </div>
+
+                </div>
+
+
+                <div class="member-details">
+
+                  <div class="detail-row">
+                    <div class="detail-label">Member Name</div>
+                    <div class="detail-value">
+                      ${escapeHtml(fullName)}
+                    </div>
+                  </div>
+
+                  <div class="detail-row">
+                    <div class="detail-label">Membership Number</div>
+                    <div class="detail-value">
+                      ${escapeHtml(member.membership_number)}
+                    </div>
+                  </div>
+
+                  <div class="detail-row">
+                    <div class="detail-label">Card Number</div>
+                    <div class="detail-value">
+                      ${escapeHtml(card.card_number)}
+                    </div>
+                  </div>
+
+                  <div class="detail-row">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">
+                      <span class="status-active">
+                        ${escapeHtml(member.status || "ACTIVE").toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <div class="card-footer">
+
+                <div>
+                  Arkbridge 360 Membership
+                </div>
+
+                <div class="card-watermark">
+                  AB360GTL • MEMBER ID
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="actions">
+
+            <button
+              class="btn btn-primary"
+              type="button"
+              onclick="printMemberCard()"
+            >
+              🖨️ Print Member ID Card
+            </button>
+
+            <button
+              class="btn btn-dark"
+              type="button"
+              onclick="renderPage('addMember')"
+            >
+              ➕ Add Another Member
+            </button>
+
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    function printMemberCard() {
+      window.print();
+    }
+
+
+    /* -----------------------------
+       CARDS PAGE
+    ----------------------------- */
+
+    function renderCards() {
+      main.innerHTML = `
+        <h1 class="page-title">Member Cards</h1>
+
+        <p class="page-subtitle">
+          Arkbridge 360 Membership identification cards.
+        </p>
+
+        <div class="panel">
+
+          <div class="card-area">
+
+            <div class="member-id-card">
+
+              <div class="card-top">
+
+                <div class="card-brand">
+                  <span class="ab">AB</span><span class="three-sixty">360</span><span class="gtl">GTL</span>
+                </div>
+
+                <div class="card-heading">
+                  <div class="card-heading-main">
+                    Arkbridge 360 Membership
+                  </div>
+
+                  <div class="card-heading-small">
+                    MEMBER IDENTIFICATION CARD
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="card-body">
+
+                <div class="photo-box">
+                  PASSPORT<br>
+                  PHOTO
+                </div>
+
+                <div class="member-details">
+
+                  <div class="detail-row">
+                    <div class="detail-label">Member Name</div>
+                    <div class="detail-value">
+                      MEMBER NAME
+                    </div>
+                  </div>
+
+                  <div class="detail-row">
+                    <div class="detail-label">Membership Number</div>
+                    <div class="detail-value">
+                      MBR-2026-XXXXXX
+                    </div>
+                  </div>
+
+                  <div class="detail-row">
+                    <div class="detail-label">Card Number</div>
+                    <div class="detail-value">
+                      CARD-2026-XXXXXXXX
+                    </div>
+                  </div>
+
+                  <div class="detail-row">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">
+                      <span class="status-active">
+                        ACTIVE
+                      </span>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="card-footer">
+                <div>Arkbridge 360 Membership</div>
+                <div class="card-watermark">AB360GTL • MEMBER ID</div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <p>
+            A member's actual photograph and membership details are placed
+            on the card after registration.
+          </p>
+
+        </div>
+      `;
+    }
+
+
+    /* -----------------------------
+       STAFF
+    ----------------------------- */
+
+    function renderStaff() {
+      main.innerHTML = `
+        <h1 class="page-title">Staff</h1>
+
+        <p class="page-subtitle">
+          Arkbridge 360 Global Trust Limited staff management.
+        </p>
+
+        <div class="panel">
+
+          <h2>Staff ID Cards</h2>
+
+          <p>
+            Staff registration and staff ID-card management will be
+            connected here.
+          </p>
+
+          <div class="notice">
+            Staff cards will use the name:
+            <strong>Arkbridge 360 Global Trust Limited</strong>.
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    /* -----------------------------
+       VERIFY
+    ----------------------------- */
+
+    function renderVerify() {
+      main.innerHTML = `
+        <h1 class="page-title">Verify Membership</h1>
+
+        <p class="page-subtitle">
+          Verify an Arkbridge 360 membership or card number.
+        </p>
+
+        <div class="panel">
+
+          <div class="form-group">
+            <label for="verifyNumber">
+              Membership Number or Card Number
+            </label>
 
             <input
-              id="password"
-              type="password"
-              autocomplete="current-password"
-              required
-            >
-
+              id="verifyNumber"
+              placeholder="Enter membership or card number"
+            />
           </div>
 
           <button
-            class="primary"
-            id="loginBtn"
-            type="submit"
+            class="btn btn-primary"
+            type="button"
+            onclick="verifyMember()"
           >
-            Sign in
+            Verify
           </button>
 
-        </form>
+          <div id="verifyResult" class="message"></div>
 
-      </div>
+        </div>
+      `;
+    }
 
-    </div>
-  `;
 
-  document.getElementById('loginForm').onsubmit =
-    async e => {
+    async function verifyMember() {
+      const value =
+        document.getElementById("verifyNumber").value.trim();
 
-      e.preventDefault();
+      const resultBox =
+        document.getElementById("verifyResult");
 
-      const b =
-        document.getElementById('loginBtn');
+      resultBox.className = "message";
+      resultBox.textContent = "";
 
-      b.disabled = true;
-      b.textContent = 'Signing in…';
-
-      document.getElementById('loginErr').innerHTML = '';
-
-      const {error} =
-        await client.auth.signInWithPassword({
-
-          email:
-            document.getElementById('email')
-            .value.trim(),
-
-          password:
-            document.getElementById('password')
-            .value
-
-        });
-
-      if(error){
-
-        document.getElementById('loginErr').innerHTML =
-          '<div class="error">'+
-          esc(error.message)+
-          '</div>';
-
-        b.disabled = false;
-        b.textContent = 'Sign in';
-
+      if (!value) {
+        showMessage(
+          resultBox,
+          "Enter a membership number or card number.",
+          "error"
+        );
         return;
       }
 
-      await renderApp();
-    };
-}
-
-
-/* =========================
-   APPLICATION
-========================= */
-
-async function renderApp(){
-
-  const root =
-    document.getElementById('root');
-
-  root.innerHTML = `
-
-    <div class="shell">
-
-      <aside class="side">
-
-        <div class="brand">
-          A<span>rkbridge 360</span>
-        </div>
-
-        <nav class="nav">
-
-          <button data-p="dashboard">
-            🏠 <span>Dashboard</span>
-          </button>
-
-          <button data-p="members">
-            👥 <span>Members</span>
-          </button>
-
-          <button data-p="add-member">
-            ➕ <span>Add Member</span>
-          </button>
-
-          <button data-p="staff">
-            👔 <span>Staff</span>
-          </button>
-
-          <button data-p="cards">
-            💳 <span>Cards</span>
-          </button>
-
-          <button data-p="verify">
-            🔎 <span>Verify</span>
-          </button>
-
-          <button data-p="audit">
-            📋 <span>Audit</span>
-          </button>
-
-        </nav>
-
-      </aside>
-
-      <main class="main">
-
-        <div class="top">
-
-          <h2 id="title">
-            Dashboard
-          </h2>
-
-          <button
-            class="logout"
-            id="logout"
-          >
-            Sign out
-          </button>
-
-        </div>
-
-        <section id="content"></section>
-
-      </main>
-
-    </div>
-  `;
-
-  document
-    .querySelectorAll('[data-p]')
-    .forEach(button=>{
-
-      button.onclick = ()=>{
-
-        currentPage =
-          button.dataset.p;
-
-        loadPage();
-
-      };
-
-    });
-
-  document
-    .getElementById('logout')
-    .onclick = async ()=>{
-
-      await client.auth.signOut();
-
-      login();
-
-    };
-
-  loadPage();
-}
-
-
-/* =========================
-   RPC
-========================= */
-
-async function rpc(name,args={}){
-
-  const {data,error} =
-    await client.rpc(name,args);
-
-  if(error)
-    throw error;
-
-  return data;
-}
-
-
-/* =========================
-   PAGE LOADER
-========================= */
-
-async function loadPage(){
-
-  document
-    .querySelectorAll('[data-p]')
-    .forEach(button=>{
-
-      button.classList.toggle(
-        'active',
-        button.dataset.p === currentPage
-      );
-
-    });
-
-  const title =
-    currentPage
-      .split('-')
-      .map(x =>
-        x.charAt(0).toUpperCase()+x.slice(1)
-      )
-      .join(' ');
-
-  document.getElementById('title')
-    .textContent = title;
-
-  const c =
-    document.getElementById('content');
-
-  c.innerHTML =
-    '<div class="panel">Loading…</div>';
-
-  try{
-
-    if(currentPage === 'dashboard')
-      return dashboard(c);
-
-    if(currentPage === 'add-member')
-      return addMemberPage(c);
-
-    if(currentPage === 'members')
-      return membersPage(c);
-
-    if(currentPage === 'staff')
-      return unavailablePage(
-        c,
-        'Staff'
-      );
-
-    if(currentPage === 'cards')
-      return cardsPage(c);
-
-    if(currentPage === 'verify')
-      return unavailablePage(
-        c,
-        'Verification'
-      );
-
-    if(currentPage === 'audit')
-      return unavailablePage(
-        c,
-        'Audit Log'
-      );
-
-  }catch(e){
-
-    c.innerHTML =
-      '<div class="panel error">'+
-      esc(e.message || String(e))+
-      '</div>';
-
-  }
-}
-
-
-/* =========================
-   DASHBOARD
-========================= */
-
-async function dashboard(c){
-
-  let members = [];
-
-  try{
-
-    members =
-      await rpc(
-        'search_members',
-        {
-          p_query:'',
-          p_limit:50
-        }
-      );
-
-  }catch(e){
-
-    members = [];
-
-  }
-
-  const active =
-    members.filter(
-      x => x.status === 'active'
-    ).length;
-
-  c.innerHTML = `
-
-    <div class="grid">
-
-      <div class="stat">
-        <span class="muted">
-          Members Loaded
-        </span>
-        <b>${members.length}</b>
-      </div>
-
-      <div class="stat">
-        <span class="muted">
-          Active Members
-        </span>
-        <b>${active}</b>
-      </div>
-
-      <div class="stat">
-        <span class="muted">
-          Membership System
-        </span>
-        <b>Ready</b>
-      </div>
-
-      <div class="stat">
-        <span class="muted">
-          Supabase
-        </span>
-        <b>Connected</b>
-      </div>
-
-    </div>
-
-    <div class="panel">
-
-      <h3>
-        Welcome to Arkbridge 360
-      </h3>
-
-      <p class="muted">
-        The membership database is connected.
-        Use <strong>Add Member</strong> to register
-        a new member.
-      </p>
-
-    </div>
-  `;
-}
-
-
-/* =========================
-   ADD MEMBER
-========================= */
-
-async function addMemberPage(c){
-
-  c.innerHTML = `
-
-    <div class="panel">
-
-      <h3>
-        Add New Member
-      </h3>
-
-      <p class="muted">
-        Membership and card numbers will be
-        generated automatically.
-      </p>
-
-      <form id="memberForm">
-
-        <div class="field">
-
-          <label>
-            First Name
-          </label>
-
-          <input
-            id="first_name"
-            autocomplete="given-name"
-            required
-          >
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Last Name
-          </label>
-
-          <input
-            id="last_name"
-            autocomplete="family-name"
-            required
-          >
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Email
-          </label>
-
-          <input
-            id="member_email"
-            type="email"
-            autocomplete="email"
-          >
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Phone
-          </label>
-
-          <input
-            id="phone"
-            type="tel"
-            autocomplete="tel"
-          >
-
-        </div>
-
-        <div class="field">
-
-          <label>
-            Date of Birth
-          </label>
-
-          <input
-            id="date_of_birth"
-            type="date"
-          >
-
-        </div>
-
-        <button
-          class="primary"
-          id="saveMember"
-          type="submit"
-        >
-          Save Member
-        </button>
-
-      </form>
-
-      <div id="memberMsg"></div>
-
-    </div>
-  `;
-
-
-  document.getElementById('memberForm')
-    .onsubmit = async e => {
-
-      e.preventDefault();
-
-      const button =
-        document.getElementById('saveMember');
-
-      const msg =
-        document.getElementById('memberMsg');
-
-      button.disabled = true;
-      button.textContent = 'Creating Member…';
-
-      msg.innerHTML = '';
-
-      const args = {
-
-        /*
-          IMPORTANT:
-          The database generates the membership
-          number automatically when this is null.
-        */
-
-        p_membership_number:null,
-
-        p_first_name:
-          document
-          .getElementById('first_name')
-          .value.trim(),
-
-        p_last_name:
-          document
-          .getElementById('last_name')
-          .value.trim(),
-
-        p_middle_name:null,
-
-        p_email:
-          document
-          .getElementById('member_email')
-          .value.trim() || null,
-
-        p_phone:
-          document
-          .getElementById('phone')
-          .value.trim() || null,
-
-        p_date_of_birth:
-          document
-          .getElementById('date_of_birth')
-          .value || null,
-
-        p_address:null,
-
-        p_photo_url:null,
-
-        p_joined_at:null,
-
-        p_notes:null,
-
-        /*
-          Card number is also generated
-          automatically by Supabase.
-        */
-
-        p_card_number:null,
-
-        p_issue_date:null,
-
-        p_expiry_date:null,
-
-        p_card_photo_url:null,
-
-        p_card_data:{}
-
-      };
-
-
-      try{
-
-        const result =
-          await rpc(
-            'create_member_and_issue_card',
-            args
+      try {
+
+        const { data, error } = await client
+          .from("members")
+          .select("*")
+          .eq("membership_number", value)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (!data) {
+          showMessage(
+            resultBox,
+            "No matching member found.",
+            "error"
           );
+          return;
+        }
 
-
-        const member =
-          result && result.member
-            ? result.member
-            : {};
-
-        const card =
-          result && result.card
-            ? result.card
-            : {};
-
-
-        msg.innerHTML = `
-
-          <div class="success">
-
-            <h3>
-              Member Created Successfully
-            </h3>
-
-            <p>
-              The member has been registered
-              and a membership card has been issued.
-            </p>
-
-            <div class="numberBox">
-
-              <span>
-                Member Name
-              </span>
-
-              <strong>
-                ${esc(
-                  [
-                    member.first_name,
-                    member.middle_name,
-                    member.last_name
-                  ]
-                  .filter(Boolean)
-                  .join(' ')
-                )}
-              </strong>
-
-            </div>
-
-            <div class="numberBox">
-
-              <span>
-                Membership Number
-              </span>
-
-              <strong>
-                ${esc(
-                  member.membership_number || 'Generated'
-                )}
-              </strong>
-
-            </div>
-
-            <div class="numberBox">
-
-              <span>
-                Card Number
-              </span>
-
-              <strong>
-                ${esc(
-                  card.card_number || 'Generated'
-                )}
-              </strong>
-
-            </div>
-
-            <div class="numberBox">
-
-              <span>
-                Member Status
-              </span>
-
-              <strong>
-                ${esc(
-                  member.status || 'active'
-                )}
-              </strong>
-
-            </div>
-
-          </div>
-
-        `;
-
-        document
-          .getElementById('memberForm')
-          .reset();
-
-        toast(
-          'Member and membership card created successfully.'
+        showMessage(
+          resultBox,
+          `Verified: ${[
+            data.first_name,
+            data.middle_name,
+            data.last_name
+          ].filter(Boolean).join(" ")} — ${data.status || "active"}`,
+          "success"
         );
 
-      }catch(e){
+      } catch (error) {
 
-        msg.innerHTML = `
-
-          <div class="error">
-
-            <strong>
-              Member could not be created.
-            </strong>
-
-            <div style="margin-top:7px">
-              ${esc(
-                e.message || String(e)
-              )}
-            </div>
-
-          </div>
-
-        `;
-
+        showMessage(
+          resultBox,
+          "Verification failed: " + error.message,
+          "error"
+        );
       }
-
-      button.disabled = false;
-      button.textContent = 'Save Member';
-
-    };
-}
-
-
-/* =========================
-   MEMBERS
-========================= */
-
-async function membersPage(c){
-
-  c.innerHTML = `
-
-    <div class="panel">
-
-      <div class="search">
-
-        <input
-          id="memberSearch"
-          placeholder="Search members…"
-        >
-
-        <button
-          class="primary"
-          style="width:auto;padding:10px 16px"
-          id="memberSearchBtn"
-        >
-          Search
-        </button>
-
-      </div>
-
-      <div
-        id="memberResults"
-        class="muted"
-      >
-        Loading members…
-      </div>
-
-    </div>
-  `;
-
-
-  async function search(){
-
-    const value =
-      document
-      .getElementById('memberSearch')
-      .value.trim();
-
-    const output =
-      document.getElementById('memberResults');
-
-    output.innerHTML =
-      'Loading…';
-
-    try{
-
-      const rows =
-        await rpc(
-          'search_members',
-          {
-            p_query:value,
-            p_limit:100
-          }
-        );
-
-      output.innerHTML =
-        table(
-          rows,
-          [
-            'membership_number',
-            'first_name',
-            'last_name',
-            'email',
-            'phone',
-            'status'
-          ]
-        );
-
-    }catch(e){
-
-      output.innerHTML =
-        '<div class="error">'+
-        esc(e.message || String(e))+
-        '</div>';
-
     }
-  }
 
 
-  document
-    .getElementById('memberSearchBtn')
-    .onclick = search;
+    /* -----------------------------
+       AUDIT
+    ----------------------------- */
 
+    function renderAudit() {
+      main.innerHTML = `
+        <h1 class="page-title">Audit</h1>
 
-  document
-    .getElementById('memberSearch')
-    .onkeydown = e => {
-
-      if(e.key === 'Enter')
-        search();
-
-    };
-
-
-  await search();
-}
-
-
-/* =========================
-   CARDS
-========================= */
-
-function cardsPage(c){
-
-  c.innerHTML = `
-
-    <div class="panel">
-
-      <h3>
-        Membership Cards
-      </h3>
-
-      <p class="muted">
-        Membership cards are automatically
-        issued when a new member is created.
-      </p>
-
-      <div class="success">
-
-        <strong>
-          Automatic Card Issuance
-        </strong>
-
-        <p>
-          When you create a member, Arkbridge 360
-          automatically creates the membership
-          card and generates its card number.
+        <p class="page-subtitle">
+          Membership system activity and audit records.
         </p>
 
-      </div>
+        <div class="panel">
 
-      <button
-        class="primary"
-        style="margin-top:12px"
-        onclick="currentPage='add-member';loadPage()"
-      >
-        ➕ Create Member & Issue Card
-      </button>
+          <p>
+            Audit management is reserved for the next stage of the
+            Arkbridge 360 Membership system.
+          </p>
 
-    </div>
-  `;
-}
-
-
-/* =========================
-   UNAVAILABLE PAGES
-========================= */
-
-function unavailablePage(c,name){
-
-  c.innerHTML = `
-
-    <div class="panel">
-
-      <h3>
-        ${esc(name)}
-      </h3>
-
-      <p class="muted">
-        This section is reserved for the next
-        stage of the Arkbridge 360 system.
-      </p>
-
-      <div class="success">
-
-        <strong>
-          Core membership registration is ready.
-        </strong>
-
-        <p>
-          Members can currently be registered,
-          membership numbers generated, and cards
-          issued automatically.
-        </p>
-
-      </div>
-
-    </div>
-  `;
-}
-
-
-/* =========================
-   TABLE
-========================= */
-
-function table(rows,cols){
-
-  if(!rows || !rows.length){
-
-    return `
-      <div class="muted">
-        No records found.
-      </div>
-    `;
-
-  }
-
-
-  return `
-
-    <div class="tablewrap">
-
-      <table class="table">
-
-        <thead>
-
-          <tr>
-
-            ${
-              cols
-              .map(
-                column =>
-                  `<th>${
-                    esc(
-                      column
-                      .replaceAll('_',' ')
-                    )
-                  }</th>`
-              )
-              .join('')
-            }
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${
-            rows
-            .map(row=>`
-
-              <tr>
-
-                ${
-                  cols
-                  .map(column=>`
-
-                    <td>
-
-                      ${
-                        column === 'status'
-
-                        ? `<span class="pill">${
-                            esc(row[column])
-                          }</span>`
-
-                        : esc(row[column])
-
-                      }
-
-                    </td>
-
-                  `)
-                  .join('')
-                }
-
-              </tr>
-
-            `)
-            .join('')
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-  `;
-}
-
-
-/* =========================
-   AUTH STATE
-========================= */
-
-client.auth.onAuthStateChange(
-  async(event,session)=>{
-
-    if(session){
-
-      const root =
-        document.getElementById('root');
-
-      if(
-        root &&
-        root.querySelector('.login')
-      ){
-
-        await renderApp();
-
-      }
-
-    }else{
-
-      login();
-
+        </div>
+      `;
     }
 
-  }
-);
 
+    /* -----------------------------
+       START APPLICATION
+    ----------------------------- */
 
-/* =========================
-   START APPLICATION
-========================= */
-
-(async()=>{
-
-  const {
-    data:{
-      session
-    }
-  } =
-    await client.auth.getSession();
-
-  if(session){
-
-    await renderApp();
-
-  }else{
-
-    login();
-
-  }
-
-})();
-
-</script>
+    checkSession();
+  </script>
 
 </body>
 </html>
