@@ -4,57 +4,300 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Arkbridge 360 Membership</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f4f7fb;color:#152033}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:#f4f7fb;
+  color:#152033
+}
+
 button,input{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
-.app{min-height:100vh}
-.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(145deg,#102a43,#1f6f8b)}
-.card{background:#fff;border-radius:20px;box-shadow:0 14px 45px #0003;padding:24px;width:min(430px,100%)}
-h1,h2,h3{margin-top:0}
-.brand{font-weight:800;font-size:24px}
+
+.login{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  background:linear-gradient(145deg,#102a43,#1f6f8b)
+}
+
+.card{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 14px 45px #0003;
+  padding:24px;
+  width:min(430px,100%)
+}
+
+.brand{
+  font-weight:800;
+  font-size:24px
+}
+
 .muted{color:#6b7280}
+
 .field{margin:14px 0}
-.field label{display:block;font-weight:650;margin-bottom:7px}
-.field input{width:100%;padding:13px;border:1px solid #d6dce5;border-radius:10px}
-.primary{width:100%;padding:13px;border:0;border-radius:10px;background:#126782;color:white;font-weight:750}
-.error{color:#b42318;background:#fff0f0;padding:10px;border-radius:9px;margin:12px 0}
-.shell{display:flex;min-height:100vh}
-.side{width:240px;background:#102a43;color:#fff;padding:20px;position:fixed;inset:0 auto 0 0}
-.side .brand{margin-bottom:25px}
-.nav button{display:block;width:100%;text-align:left;background:none;border:0;color:#dbeafe;padding:12px;border-radius:9px;margin:3px 0}
-.nav button.active,.nav button:hover{background:#ffffff18;color:#fff}
-.main{margin-left:240px;width:calc(100% - 240px);padding:22px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
-.logout{border:1px solid #d6dce5;background:#fff;padding:9px 12px;border-radius:9px}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.stat{background:#fff;padding:18px;border-radius:15px;box-shadow:0 3px 12px #0000000b}
-.stat b{font-size:27px;display:block;margin-top:6px}
-.panel{background:#fff;border-radius:15px;padding:18px;margin-top:16px;box-shadow:0 3px 12px #0000000b}
-.search{display:flex;gap:9px;margin-bottom:14px}
-.search input{flex:1;padding:11px;border:1px solid #d6dce5;border-radius:9px}
-.tablewrap{overflow:auto}
-.table{width:100%;border-collapse:collapse;min-width:600px}
-.table th,.table td{text-align:left;padding:11px;border-bottom:1px solid #edf0f4}
-.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#edf6f8}
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#152033;color:#fff;padding:12px 16px;border-radius:10px;z-index:10;max-width:90%}
+
+.field label{
+  display:block;
+  font-weight:650;
+  margin-bottom:7px
+}
+
+.field input{
+  width:100%;
+  padding:13px;
+  border:1px solid #d6dce5;
+  border-radius:10px
+}
+
+.primary{
+  width:100%;
+  padding:13px;
+  border:0;
+  border-radius:10px;
+  background:#126782;
+  color:white;
+  font-weight:750
+}
+
+.primary:disabled{
+  opacity:.6;
+  cursor:not-allowed
+}
+
+.error{
+  color:#b42318;
+  background:#fff0f0;
+  padding:10px;
+  border-radius:9px;
+  margin:12px 0
+}
+
+.success{
+  color:#176b3a;
+  background:#eefbf3;
+  padding:15px;
+  border-radius:12px;
+  margin-top:16px
+}
+
+.numberBox{
+  background:#fff;
+  border:1px solid #dbe5ea;
+  border-radius:12px;
+  padding:14px;
+  margin:10px 0
+}
+
+.numberBox span{
+  display:block;
+  color:#6b7280;
+  font-size:13px;
+  margin-bottom:5px
+}
+
+.numberBox strong{
+  display:block;
+  font-size:20px;
+  letter-spacing:.5px
+}
+
+.shell{
+  display:flex;
+  min-height:100vh
+}
+
+.side{
+  width:240px;
+  background:#102a43;
+  color:#fff;
+  padding:20px;
+  position:fixed;
+  inset:0 auto 0 0
+}
+
+.side .brand{
+  margin-bottom:25px
+}
+
+.nav button{
+  display:block;
+  width:100%;
+  text-align:left;
+  background:none;
+  border:0;
+  color:#dbeafe;
+  padding:12px;
+  border-radius:9px;
+  margin:3px 0
+}
+
+.nav button.active,
+.nav button:hover{
+  background:#ffffff18;
+  color:#fff
+}
+
+.main{
+  margin-left:240px;
+  width:calc(100% - 240px);
+  padding:22px
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px
+}
+
+.logout{
+  border:1px solid #d6dce5;
+  background:#fff;
+  padding:9px 12px;
+  border-radius:9px
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px
+}
+
+.stat{
+  background:#fff;
+  padding:18px;
+  border-radius:15px;
+  box-shadow:0 3px 12px #0000000b
+}
+
+.stat b{
+  font-size:27px;
+  display:block;
+  margin-top:6px
+}
+
+.panel{
+  background:#fff;
+  border-radius:15px;
+  padding:18px;
+  margin-top:16px;
+  box-shadow:0 3px 12px #0000000b
+}
+
+.search{
+  display:flex;
+  gap:9px;
+  margin-bottom:14px
+}
+
+.search input{
+  flex:1;
+  padding:11px;
+  border:1px solid #d6dce5;
+  border-radius:9px
+}
+
+.tablewrap{
+  overflow:auto
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:600px
+}
+
+.table th,
+.table td{
+  text-align:left;
+  padding:11px;
+  border-bottom:1px solid #edf0f4
+}
+
+.pill{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#edf6f8
+}
+
+.toast{
+  position:fixed;
+  bottom:18px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#152033;
+  color:#fff;
+  padding:12px 16px;
+  border-radius:10px;
+  z-index:10;
+  max-width:90%
+}
 
 @media(max-width:760px){
-.side{width:76px;padding:12px 8px}
-.side .brand span,.nav button span{display:none}
-.nav button{text-align:center;font-size:20px}
-.main{margin-left:76px;width:calc(100% - 76px);padding:14px}
-.grid{grid-template-columns:repeat(2,1fr)}
-.top h2{font-size:20px}
-.card{padding:20px}
+
+  .side{
+    width:76px;
+    padding:12px 8px
+  }
+
+  .side .brand span,
+  .nav button span{
+    display:none
+  }
+
+  .nav button{
+    text-align:center;
+    font-size:20px
+  }
+
+  .main{
+    margin-left:76px;
+    width:calc(100% - 76px);
+    padding:14px
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .top h2{
+    font-size:20px
+  }
+
+  .card{
+    padding:20px
+  }
 }
 
 @media(max-width:420px){
-.grid{grid-template-columns:1fr}
-.main{padding:10px}
+
+  .grid{
+    grid-template-columns:1fr
+  }
+
+  .main{
+    padding:10px
+  }
+
+  .search{
+    flex-direction:column
+  }
+
+  .search button{
+    width:100%!important
+  }
 }
 </style>
 </head>
@@ -66,10 +309,13 @@ h1,h2,h3{margin-top:0}
 
 <script>
 
-const SUPABASE_URL='https://ijcipmdvzhpfzmublwky.supabase.co';
-const SUPABASE_KEY='sb_publishable_7vJ5i4UwsVR-fU3HWjVapg_YQ53B8HB';
+const SUPABASE_URL =
+  'https://ijcipmdvzhpfzmublwky.supabase.co';
 
-const client=supabase.createClient(
+const SUPABASE_KEY =
+  'sb_publishable_7vJ5i4UwsVR-fU3HWjVapg_YQ53B8HB';
+
+const client = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY,
   {
@@ -81,32 +327,49 @@ const client=supabase.createClient(
   }
 );
 
-let currentPage='dashboard';
+let currentPage = 'dashboard';
 
-const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({
-  '&':'&amp;',
-  '<':'&lt;',
-  '>':'&gt;',
-  "'":'&#39;',
-  '"':'&quot;'
-}[c]));
+const esc = v =>
+  String(v ?? '').replace(/[&<>'"]/g,c=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    "'":'&#39;',
+    '"':'&quot;'
+  }[c]));
 
-function toast(m){
-  const t=document.getElementById('toast');
-  t.textContent=m;
+function toast(message){
+
+  const t = document.getElementById('toast');
+
+  t.textContent = message;
+
   t.classList.remove('hidden');
-  setTimeout(()=>t.classList.add('hidden'),3000);
+
+  setTimeout(
+    ()=>t.classList.add('hidden'),
+    3000
+  );
 }
+
+
+/* =========================
+   LOGIN
+========================= */
 
 function login(){
 
-  const root=document.getElementById('root');
+  const root = document.getElementById('root');
 
-  root.innerHTML=`
+  root.innerHTML = `
+
     <div class="login">
+
       <div class="card">
 
-        <div class="brand">Arkbridge 360</div>
+        <div class="brand">
+          Arkbridge 360
+        </div>
 
         <p class="muted">
           Membership & Staff Management
@@ -117,23 +380,29 @@ function login(){
         <form id="loginForm">
 
           <div class="field">
+
             <label>Email</label>
+
             <input
               id="email"
               type="email"
               autocomplete="username"
               required
             >
+
           </div>
 
           <div class="field">
+
             <label>Password</label>
+
             <input
               id="password"
               type="password"
               autocomplete="current-password"
               required
             >
+
           </div>
 
           <button
@@ -147,45 +416,64 @@ function login(){
         </form>
 
       </div>
+
     </div>
   `;
 
-  document.getElementById('loginForm').onsubmit=async e=>{
+  document.getElementById('loginForm').onsubmit =
+    async e => {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    const b=document.getElementById('loginBtn');
+      const b =
+        document.getElementById('loginBtn');
 
-    b.disabled=true;
-    b.textContent='Signing in…';
+      b.disabled = true;
+      b.textContent = 'Signing in…';
 
-    document.getElementById('loginErr').innerHTML='';
+      document.getElementById('loginErr').innerHTML = '';
 
-    const {error}=await client.auth.signInWithPassword({
-      email:document.getElementById('email').value.trim(),
-      password:document.getElementById('password').value
-    });
+      const {error} =
+        await client.auth.signInWithPassword({
 
-    if(error){
+          email:
+            document.getElementById('email')
+            .value.trim(),
 
-      document.getElementById('loginErr').innerHTML=
-        '<div class="error">'+esc(error.message)+'</div>';
+          password:
+            document.getElementById('password')
+            .value
 
-      b.disabled=false;
-      b.textContent='Sign in';
+        });
 
-      return;
-    }
+      if(error){
 
-    await renderApp();
-  };
+        document.getElementById('loginErr').innerHTML =
+          '<div class="error">'+
+          esc(error.message)+
+          '</div>';
+
+        b.disabled = false;
+        b.textContent = 'Sign in';
+
+        return;
+      }
+
+      await renderApp();
+    };
 }
+
+
+/* =========================
+   APPLICATION
+========================= */
 
 async function renderApp(){
 
-  const root=document.getElementById('root');
+  const root =
+    document.getElementById('root');
 
-  root.innerHTML=`
+  root.innerHTML = `
 
     <div class="shell">
 
@@ -253,286 +541,304 @@ async function renderApp(){
     </div>
   `;
 
-  document.querySelectorAll('[data-p]').forEach(b=>{
+  document
+    .querySelectorAll('[data-p]')
+    .forEach(button=>{
 
-    b.onclick=()=>{
+      button.onclick = ()=>{
 
-      currentPage=b.dataset.p;
+        currentPage =
+          button.dataset.p;
 
-      loadPage();
+        loadPage();
+
+      };
+
+    });
+
+  document
+    .getElementById('logout')
+    .onclick = async ()=>{
+
+      await client.auth.signOut();
+
+      login();
 
     };
-
-  });
-
-  document.getElementById('logout').onclick=async()=>{
-
-    await client.auth.signOut();
-
-    login();
-
-  };
 
   loadPage();
 }
 
+
+/* =========================
+   RPC
+========================= */
+
 async function rpc(name,args={}){
 
-  const {data,error}=await client.rpc(name,args);
+  const {data,error} =
+    await client.rpc(name,args);
 
-  if(error)throw error;
+  if(error)
+    throw error;
 
   return data;
 }
+
+
+/* =========================
+   PAGE LOADER
+========================= */
 
 async function loadPage(){
 
   document
     .querySelectorAll('[data-p]')
-    .forEach(b=>
-      b.classList.toggle(
+    .forEach(button=>{
+
+      button.classList.toggle(
         'active',
-        b.dataset.p===currentPage
+        button.dataset.p === currentPage
+      );
+
+    });
+
+  const title =
+    currentPage
+      .split('-')
+      .map(x =>
+        x.charAt(0).toUpperCase()+x.slice(1)
       )
-    );
+      .join(' ');
 
-  document.getElementById('title').textContent=
-    currentPage[0].toUpperCase()+currentPage.slice(1);
+  document.getElementById('title')
+    .textContent = title;
 
-  const c=document.getElementById('content');
+  const c =
+    document.getElementById('content');
 
-  c.innerHTML=
+  c.innerHTML =
     '<div class="panel">Loading…</div>';
 
   try{
 
-    if(currentPage==='dashboard')
+    if(currentPage === 'dashboard')
       return dashboard(c);
 
-    if(currentPage==='add-member')
+    if(currentPage === 'add-member')
       return addMemberPage(c);
 
-    if(currentPage==='members')
-      return list(
+    if(currentPage === 'members')
+      return membersPage(c);
+
+    if(currentPage === 'staff')
+      return unavailablePage(
         c,
-        'Members',
-        'search_members',
-        'p_query',
-        'p_limit',
-        [
-          'membership_number',
-          'first_name',
-          'last_name',
-          'email',
-          'phone',
-          'status'
-        ]
+        'Staff'
       );
 
-    if(currentPage==='staff')
-      return list(
+    if(currentPage === 'cards')
+      return cardsPage(c);
+
+    if(currentPage === 'verify')
+      return unavailablePage(
         c,
-        'Staff',
-        'search_staff',
-        'p_query',
-        'p_limit',
-        [
-          'staff_id',
-          'first_name',
-          'last_name',
-          'email',
-          'department',
-          'role',
-          'status'
-        ]
+        'Verification'
       );
 
-    if(currentPage==='cards')
-      return list(
+    if(currentPage === 'audit')
+      return unavailablePage(
         c,
-        'Membership Cards',
-        'search_cards',
-        'p_query',
-        'p_limit',
-        [
-          'card_number',
-          'membership_number',
-          'first_name',
-          'last_name',
-          'status',
-          'issue_date',
-          'expiry_date'
-        ]
+        'Audit Log'
       );
-
-    if(currentPage==='verify')
-      return verifyPage(c);
-
-    if(currentPage==='audit')
-      return audit(c);
 
   }catch(e){
 
-    c.innerHTML=
+    c.innerHTML =
       '<div class="panel error">'+
-      esc(e.message||String(e))+
+      esc(e.message || String(e))+
       '</div>';
 
   }
 }
 
+
+/* =========================
+   DASHBOARD
+========================= */
+
 async function dashboard(c){
 
-  let d=await rpc('dashboard_stats');
+  let members = [];
 
-  d=Array.isArray(d)?d[0]:d||{};
+  try{
 
-  c.innerHTML=
-
-    '<div class="grid">'+
-
-    [
-      ['Members',d.total_members],
-      ['Active Members',d.active_members],
-      ['Cards',d.total_cards],
-      ['Staff',d.total_staff],
-      ['Active Cards',d.active_cards],
-      ['Today Verifications',d.today_verifications],
-      ['Failed Today',d.today_failed],
-      ['Pending Members',d.pending_members]
-    ]
-
-    .map(x=>
-
-      `<div class="stat">
-        <span class="muted">${esc(x[0])}</span>
-        <b>${esc(x[1]??0)}</b>
-      </div>`
-
-    ).join('')+
-
-    '</div>'+
-
-    `<div class="panel">
-      <h3>Welcome</h3>
-      <p class="muted">
-        Arkbridge 360 membership management is connected to Supabase.
-      </p>
-    </div>`;
-}
-
-async function list(
-  c,
-  title,
-  fn,
-  qarg,
-  larg,
-  cols
-){
-
-  c.innerHTML=`
-
-    <div class="panel">
-
-      <div class="search">
-
-        <input
-          id="q"
-          placeholder="Search ${title.toLowerCase()}…"
-        >
-
-        <button
-          class="primary"
-          style="width:auto;padding:10px 16px"
-          id="go"
-        >
-          Search
-        </button>
-
-      </div>
-
-      <div id="results" class="muted">
-        Enter a search term.
-      </div>
-
-    </div>
-  `;
-
-  async function run(){
-
-    const q=document.getElementById('q').value.trim();
-
-    document.getElementById('results').innerHTML=
-      'Loading…';
-
-    try{
-
-      const rows=await rpc(
-        fn,
+    members =
+      await rpc(
+        'search_members',
         {
-          [qarg]:q,
-          [larg]:50
+          p_query:'',
+          p_limit:50
         }
       );
 
-      document.getElementById('results').innerHTML=
-        table(rows,cols);
+  }catch(e){
 
-    }catch(e){
+    members = [];
 
-      document.getElementById('results').innerHTML=
-        '<div class="error">'+
-        esc(e.message)+
-        '</div>';
-
-    }
   }
 
-  document.getElementById('go').onclick=run;
+  const active =
+    members.filter(
+      x => x.status === 'active'
+    ).length;
 
-  document.getElementById('q').onkeydown=e=>{
+  c.innerHTML = `
 
-    if(e.key==='Enter')
-      run();
+    <div class="grid">
 
-  };
-}
-  async function addMemberPage(c){
+      <div class="stat">
+        <span class="muted">
+          Members Loaded
+        </span>
+        <b>${members.length}</b>
+      </div>
 
-  c.innerHTML=`
+      <div class="stat">
+        <span class="muted">
+          Active Members
+        </span>
+        <b>${active}</b>
+      </div>
+
+      <div class="stat">
+        <span class="muted">
+          Membership System
+        </span>
+        <b>Ready</b>
+      </div>
+
+      <div class="stat">
+        <span class="muted">
+          Supabase
+        </span>
+        <b>Connected</b>
+      </div>
+
+    </div>
 
     <div class="panel">
 
-      <h3>Add New Member</h3>
+      <h3>
+        Welcome to Arkbridge 360
+      </h3>
+
+      <p class="muted">
+        The membership database is connected.
+        Use <strong>Add Member</strong> to register
+        a new member.
+      </p>
+
+    </div>
+  `;
+}
+
+
+/* =========================
+   ADD MEMBER
+========================= */
+
+async function addMemberPage(c){
+
+  c.innerHTML = `
+
+    <div class="panel">
+
+      <h3>
+        Add New Member
+      </h3>
+
+      <p class="muted">
+        Membership and card numbers will be
+        generated automatically.
+      </p>
 
       <form id="memberForm">
 
         <div class="field">
-          <label>First Name</label>
-          <input id="first_name" required>
+
+          <label>
+            First Name
+          </label>
+
+          <input
+            id="first_name"
+            autocomplete="given-name"
+            required
+          >
+
         </div>
 
         <div class="field">
-          <label>Last Name</label>
-          <input id="last_name" required>
+
+          <label>
+            Last Name
+          </label>
+
+          <input
+            id="last_name"
+            autocomplete="family-name"
+            required
+          >
+
         </div>
 
         <div class="field">
-          <label>Email</label>
-          <input id="email" type="email">
+
+          <label>
+            Email
+          </label>
+
+          <input
+            id="member_email"
+            type="email"
+            autocomplete="email"
+          >
+
         </div>
 
         <div class="field">
-          <label>Phone</label>
-          <input id="phone">
+
+          <label>
+            Phone
+          </label>
+
+          <input
+            id="phone"
+            type="tel"
+            autocomplete="tel"
+          >
+
         </div>
 
         <div class="field">
-          <label>Date of Birth</label>
-          <input id="date_of_birth" type="date">
+
+          <label>
+            Date of Birth
+          </label>
+
+          <input
+            id="date_of_birth"
+            type="date"
+          >
+
         </div>
 
-        <button class="primary" id="saveMember">
+        <button
+          class="primary"
+          id="saveMember"
+          type="submit"
+        >
           Save Member
         </button>
 
@@ -543,61 +849,427 @@ async function list(
     </div>
   `;
 
-  document.getElementById('memberForm').onsubmit=async e=>{
 
-    e.preventDefault();
+  document.getElementById('memberForm')
+    .onsubmit = async e => {
 
-    const b=document.getElementById('saveMember');
-    const msg=document.getElementById('memberMsg');
+      e.preventDefault();
 
-    b.disabled=true;
-    b.textContent='Saving…';
-    msg.innerHTML='';
+      const button =
+        document.getElementById('saveMember');
 
-    const args={
-      p_first_name:document.getElementById('first_name').value.trim(),
-      p_last_name:document.getElementById('last_name').value.trim(),
-      p_email:document.getElementById('email').value.trim()||null,
-      p_phone:document.getElementById('phone').value.trim()||null,
-      p_date_of_birth:document.getElementById('date_of_birth').value||null
+      const msg =
+        document.getElementById('memberMsg');
+
+      button.disabled = true;
+      button.textContent = 'Creating Member…';
+
+      msg.innerHTML = '';
+
+      const args = {
+
+        /*
+          IMPORTANT:
+          The database generates the membership
+          number automatically when this is null.
+        */
+
+        p_membership_number:null,
+
+        p_first_name:
+          document
+          .getElementById('first_name')
+          .value.trim(),
+
+        p_last_name:
+          document
+          .getElementById('last_name')
+          .value.trim(),
+
+        p_middle_name:null,
+
+        p_email:
+          document
+          .getElementById('member_email')
+          .value.trim() || null,
+
+        p_phone:
+          document
+          .getElementById('phone')
+          .value.trim() || null,
+
+        p_date_of_birth:
+          document
+          .getElementById('date_of_birth')
+          .value || null,
+
+        p_address:null,
+
+        p_photo_url:null,
+
+        p_joined_at:null,
+
+        p_notes:null,
+
+        /*
+          Card number is also generated
+          automatically by Supabase.
+        */
+
+        p_card_number:null,
+
+        p_issue_date:null,
+
+        p_expiry_date:null,
+
+        p_card_photo_url:null,
+
+        p_card_data:{}
+
+      };
+
+
+      try{
+
+        const result =
+          await rpc(
+            'create_member_and_issue_card',
+            args
+          );
+
+
+        const member =
+          result && result.member
+            ? result.member
+            : {};
+
+        const card =
+          result && result.card
+            ? result.card
+            : {};
+
+
+        msg.innerHTML = `
+
+          <div class="success">
+
+            <h3>
+              Member Created Successfully
+            </h3>
+
+            <p>
+              The member has been registered
+              and a membership card has been issued.
+            </p>
+
+            <div class="numberBox">
+
+              <span>
+                Member Name
+              </span>
+
+              <strong>
+                ${esc(
+                  [
+                    member.first_name,
+                    member.middle_name,
+                    member.last_name
+                  ]
+                  .filter(Boolean)
+                  .join(' ')
+                )}
+              </strong>
+
+            </div>
+
+            <div class="numberBox">
+
+              <span>
+                Membership Number
+              </span>
+
+              <strong>
+                ${esc(
+                  member.membership_number || 'Generated'
+                )}
+              </strong>
+
+            </div>
+
+            <div class="numberBox">
+
+              <span>
+                Card Number
+              </span>
+
+              <strong>
+                ${esc(
+                  card.card_number || 'Generated'
+                )}
+              </strong>
+
+            </div>
+
+            <div class="numberBox">
+
+              <span>
+                Member Status
+              </span>
+
+              <strong>
+                ${esc(
+                  member.status || 'active'
+                )}
+              </strong>
+
+            </div>
+
+          </div>
+
+        `;
+
+        document
+          .getElementById('memberForm')
+          .reset();
+
+        toast(
+          'Member and membership card created successfully.'
+        );
+
+      }catch(e){
+
+        msg.innerHTML = `
+
+          <div class="error">
+
+            <strong>
+              Member could not be created.
+            </strong>
+
+            <div style="margin-top:7px">
+              ${esc(
+                e.message || String(e)
+              )}
+            </div>
+
+          </div>
+
+        `;
+
+      }
+
+      button.disabled = false;
+      button.textContent = 'Save Member';
+
     };
+}
+
+
+/* =========================
+   MEMBERS
+========================= */
+
+async function membersPage(c){
+
+  c.innerHTML = `
+
+    <div class="panel">
+
+      <div class="search">
+
+        <input
+          id="memberSearch"
+          placeholder="Search members…"
+        >
+
+        <button
+          class="primary"
+          style="width:auto;padding:10px 16px"
+          id="memberSearchBtn"
+        >
+          Search
+        </button>
+
+      </div>
+
+      <div
+        id="memberResults"
+        class="muted"
+      >
+        Loading members…
+      </div>
+
+    </div>
+  `;
+
+
+  async function search(){
+
+    const value =
+      document
+      .getElementById('memberSearch')
+      .value.trim();
+
+    const output =
+      document.getElementById('memberResults');
+
+    output.innerHTML =
+      'Loading…';
 
     try{
 
-      const result=await rpc(
-        'create_member_and_issue_card',
-        args
-      );
+      const rows =
+        await rpc(
+          'search_members',
+          {
+            p_query:value,
+            p_limit:100
+          }
+        );
 
-      msg.innerHTML=
-        '<div class="panel">'+
-        '<strong>Member created successfully.</strong>'+
-        '<pre style="white-space:pre-wrap">'+
-        esc(JSON.stringify(result,null,2))+
-        '</pre>'+
-        '</div>';
-
-      document.getElementById('memberForm').reset();
+      output.innerHTML =
+        table(
+          rows,
+          [
+            'membership_number',
+            'first_name',
+            'last_name',
+            'email',
+            'phone',
+            'status'
+          ]
+        );
 
     }catch(e){
 
-      msg.innerHTML=
+      output.innerHTML =
         '<div class="error">'+
-        esc(e.message||String(e))+
+        esc(e.message || String(e))+
         '</div>';
 
     }
+  }
 
-    b.disabled=false;
-    b.textContent='Save Member';
 
-  };
+  document
+    .getElementById('memberSearchBtn')
+    .onclick = search;
+
+
+  document
+    .getElementById('memberSearch')
+    .onkeydown = e => {
+
+      if(e.key === 'Enter')
+        search();
+
+    };
+
+
+  await search();
 }
+
+
+/* =========================
+   CARDS
+========================= */
+
+function cardsPage(c){
+
+  c.innerHTML = `
+
+    <div class="panel">
+
+      <h3>
+        Membership Cards
+      </h3>
+
+      <p class="muted">
+        Membership cards are automatically
+        issued when a new member is created.
+      </p>
+
+      <div class="success">
+
+        <strong>
+          Automatic Card Issuance
+        </strong>
+
+        <p>
+          When you create a member, Arkbridge 360
+          automatically creates the membership
+          card and generates its card number.
+        </p>
+
+      </div>
+
+      <button
+        class="primary"
+        style="margin-top:12px"
+        onclick="currentPage='add-member';loadPage()"
+      >
+        ➕ Create Member & Issue Card
+      </button>
+
+    </div>
+  `;
+}
+
+
+/* =========================
+   UNAVAILABLE PAGES
+========================= */
+
+function unavailablePage(c,name){
+
+  c.innerHTML = `
+
+    <div class="panel">
+
+      <h3>
+        ${esc(name)}
+      </h3>
+
+      <p class="muted">
+        This section is reserved for the next
+        stage of the Arkbridge 360 system.
+      </p>
+
+      <div class="success">
+
+        <strong>
+          Core membership registration is ready.
+        </strong>
+
+        <p>
+          Members can currently be registered,
+          membership numbers generated, and cards
+          issued automatically.
+        </p>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* =========================
+   TABLE
+========================= */
 
 function table(rows,cols){
 
-  if(!rows||!rows.length)
-    return '<div class="muted">No records found.</div>';
+  if(!rows || !rows.length){
+
+    return `
+      <div class="muted">
+        No records found.
+      </div>
+    `;
+
+  }
+
 
   return `
 
@@ -606,34 +1278,63 @@ function table(rows,cols){
       <table class="table">
 
         <thead>
+
           <tr>
-            ${cols.map(c=>`<th>${esc(c.replaceAll('_',' '))}</th>`).join('')}
+
+            ${
+              cols
+              .map(
+                column =>
+                  `<th>${
+                    esc(
+                      column
+                      .replaceAll('_',' ')
+                    )
+                  }</th>`
+              )
+              .join('')
+            }
+
           </tr>
+
         </thead>
 
         <tbody>
 
-          ${rows.map(r=>`
+          ${
+            rows
+            .map(row=>`
 
-            <tr>
+              <tr>
 
-              ${cols.map(c=>`
+                ${
+                  cols
+                  .map(column=>`
 
-                <td>
+                    <td>
 
-                  ${
-                    c==='status'
-                    ? `<span class="pill">${esc(r[c])}</span>`
-                    : esc(r[c])
-                  }
+                      ${
+                        column === 'status'
 
-                </td>
+                        ? `<span class="pill">${
+                            esc(row[column])
+                          }</span>`
 
-              `).join('')}
+                        : esc(row[column])
 
-            </tr>
+                      }
 
-          `).join('')}
+                    </td>
+
+                  `)
+                  .join('')
+                }
+
+              </tr>
+
+            `)
+            .join('')
+          }
 
         </tbody>
 
@@ -643,153 +1344,27 @@ function table(rows,cols){
   `;
 }
 
-async function verifyPage(c){
 
-  c.innerHTML=`
-
-    <div class="panel">
-
-      <h3>Verify Membership</h3>
-
-      <p class="muted">
-        Enter a membership number or card number.
-      </p>
-
-      <div class="search">
-
-        <input
-          id="verifyInput"
-          placeholder="Membership or card number"
-        >
-
-        <button
-          class="primary"
-          style="width:auto;padding:10px 16px"
-          id="verifyBtn"
-        >
-          Verify
-        </button>
-
-      </div>
-
-      <div id="verifyResult"></div>
-
-    </div>
-  `;
-
-  async function verify(){
-
-    const value=
-      document.getElementById('verifyInput')
-      .value.trim();
-
-    if(!value){
-
-      document.getElementById('verifyResult').innerHTML=
-        '<div class="error">Enter a membership or card number.</div>';
-
-      return;
-    }
-
-    const out=document.getElementById('verifyResult');
-
-    out.innerHTML='Checking…';
-
-    try{
-
-      const result=await rpc(
-        'verify_membership',
-        {
-          p_identifier:value
-        }
-      );
-
-      out.innerHTML=`
-
-        <div class="panel">
-
-          <h3>Verification Result</h3>
-
-          <pre style="white-space:pre-wrap;overflow:auto">${esc(
-            JSON.stringify(result,null,2)
-          )}</pre>
-
-        </div>
-
-      `;
-
-    }catch(e){
-
-      out.innerHTML=
-        '<div class="error">'+
-        esc(e.message||String(e))+
-        '</div>';
-
-    }
-  }
-
-  document.getElementById('verifyBtn').onclick=verify;
-
-  document.getElementById('verifyInput').onkeydown=e=>{
-
-    if(e.key==='Enter')
-      verify();
-
-  };
-}
-
-async function audit(c){
-
-  c.innerHTML=`
-
-    <div class="panel">
-
-      <h3>Audit Log</h3>
-
-      <div id="auditResults">
-        Loading…
-      </div>
-
-    </div>
-  `;
-
-  try{
-
-    const rows=await rpc(
-      'get_audit_log',
-      {
-        p_limit:100
-      }
-    );
-
-    document.getElementById('auditResults').innerHTML=
-      table(
-        rows,
-        [
-          'created_at',
-          'action',
-          'actor_email',
-          'details'
-        ]
-      );
-
-  }catch(e){
-
-    document.getElementById('auditResults').innerHTML=
-      '<div class="error">'+
-      esc(e.message||String(e))+
-      '</div>';
-
-  }
-}
+/* =========================
+   AUTH STATE
+========================= */
 
 client.auth.onAuthStateChange(
   async(event,session)=>{
 
     if(session){
 
-      if(document.getElementById('root').querySelector('.login'))
+      const root =
+        document.getElementById('root');
+
+      if(
+        root &&
+        root.querySelector('.login')
+      ){
+
         await renderApp();
+
+      }
 
     }else{
 
@@ -800,18 +1375,29 @@ client.auth.onAuthStateChange(
   }
 );
 
+
+/* =========================
+   START APPLICATION
+========================= */
+
 (async()=>{
 
   const {
     data:{
       session
     }
-  }=await client.auth.getSession();
+  } =
+    await client.auth.getSession();
 
-  if(session)
+  if(session){
+
     await renderApp();
-  else
+
+  }else{
+
     login();
+
+  }
 
 })();
 
