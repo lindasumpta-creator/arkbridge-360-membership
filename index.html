@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Arkbridge 360 Membership</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -22,17 +22,32 @@
       box-sizing: border-box;
     }
 
+    html {
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
+
     body {
       margin: 0;
+      width: 100%;
+      min-width: 0;
+      min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
       background: #f3f4f6;
       color: var(--black);
+      overflow-x: hidden;
     }
 
     button,
     input,
     textarea {
       font: inherit;
+      max-width: 100%;
+    }
+
+    img {
+      max-width: 100%;
     }
 
     .hidden {
@@ -44,7 +59,9 @@
     ========================= */
 
     #loginScreen {
+      width: 100%;
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -99,6 +116,7 @@
     input,
     textarea {
       width: 100%;
+      min-width: 0;
       padding: 12px;
       border: 1px solid #ccc;
       border-radius: 9px;
@@ -114,6 +132,7 @@
 
     .form-group {
       margin-bottom: 16px;
+      min-width: 0;
     }
 
     .btn {
@@ -122,6 +141,7 @@
       padding: 12px 18px;
       cursor: pointer;
       font-weight: 800;
+      max-width: 100%;
     }
 
     .btn-primary {
@@ -153,6 +173,7 @@
       padding: 12px;
       border-radius: 8px;
       display: none;
+      overflow-wrap: anywhere;
     }
 
     .message.error {
@@ -171,13 +192,23 @@
        APP
     ========================= */
 
+    #appScreen {
+      width: 100%;
+      min-width: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
     .topbar {
+      width: 100%;
       height: 64px;
       background: white;
       border-bottom: 1px solid #ddd;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
       padding: 0 18px;
       position: sticky;
       top: 0;
@@ -185,8 +216,20 @@
     }
 
     .topbar-logo {
+      min-width: 0;
+      flex: 1 1 auto;
       font-size: 23px;
       font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-actions {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .menu-btn {
@@ -196,18 +239,23 @@
       color: white;
       border-radius: 8px;
       padding: 9px 12px;
+      cursor: pointer;
+      font-weight: 700;
     }
 
     .layout {
+      width: 100%;
+      min-width: 0;
       display: flex;
       min-height: calc(100vh - 64px);
+      min-height: calc(100dvh - 64px);
     }
 
     .sidebar {
       width: 240px;
       background: #111;
       padding: 15px 12px;
-      flex-shrink: 0;
+      flex: 0 0 240px;
     }
 
     .nav-btn {
@@ -230,32 +278,47 @@
     }
 
     .main {
-      flex: 1;
-      width: 100%;
+      flex: 1 1 auto;
+      width: 0;
+      min-width: 0;
       max-width: 1400px;
       padding: 22px;
       margin: 0 auto;
+      overflow-x: hidden;
     }
 
     .page-title {
       margin: 0 0 5px;
       font-size: 28px;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
     }
 
     .page-subtitle {
       margin-top: 0;
       color: #666;
+      overflow-wrap: anywhere;
     }
 
     .panel {
+      width: 100%;
+      min-width: 0;
       background: white;
       border-radius: 13px;
       padding: 20px;
       margin-bottom: 20px;
       box-shadow: 0 6px 20px rgba(0,0,0,.08);
+      overflow: hidden;
+    }
+
+    .panel h2,
+    .panel p {
+      overflow-wrap: anywhere;
     }
 
     .form-grid {
+      width: 100%;
+      min-width: 0;
       display: grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
       gap: 15px;
@@ -266,25 +329,34 @@
     }
 
     .actions {
+      width: 100%;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      align-items: center;
       gap: 10px;
       margin-top: 18px;
     }
 
+    .actions .btn {
+      max-width: 100%;
+    }
+
     .notice {
+      width: 100%;
       background: #fff2e8;
       border-left: 4px solid var(--orange);
       padding: 13px;
       border-radius: 6px;
       margin-bottom: 18px;
+      overflow-wrap: anywhere;
     }
 
     small {
       color: #666;
       display: block;
       margin-top: 6px;
+      overflow-wrap: anywhere;
     }
 
     /* =========================
@@ -294,11 +366,13 @@
     .photo-preview-wrap {
       margin-top: 14px;
       text-align: center;
+      width: 100%;
     }
 
     .photo-preview {
       width: 150px;
       height: 150px;
+      max-width: 150px;
       object-fit: cover;
       border: 3px solid #111;
       border-radius: 8px;
@@ -311,11 +385,13 @@
     ========================= */
 
     .success-box {
+      width: 100%;
       background: #effaf2;
       border: 1px solid #bde5c7;
       border-radius: 12px;
       padding: 18px;
       margin-bottom: 20px;
+      overflow: hidden;
     }
 
     .success-title {
@@ -326,15 +402,19 @@
     }
 
     .success-grid {
+      width: 100%;
+      min-width: 0;
       display: grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
       gap: 10px;
     }
 
     .success-item {
+      min-width: 0;
       background: white;
       padding: 10px;
       border-radius: 8px;
+      overflow-wrap: anywhere;
     }
 
     .success-label {
@@ -346,6 +426,7 @@
     .success-value {
       font-weight: 800;
       margin-top: 3px;
+      overflow-wrap: anywhere;
     }
 
     /* =========================
@@ -354,10 +435,12 @@
 
     .id-card-container {
       width: 100%;
+      min-width: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px 0 30px;
+      overflow: hidden;
     }
 
     .member-id-card {
@@ -371,6 +454,7 @@
       box-shadow: 0 18px 45px rgba(0,0,0,.18);
       position: relative;
       text-align: center;
+      flex: 0 1 760px;
     }
 
     .card-orange-top {
@@ -432,6 +516,7 @@
       font-weight: 1000;
       margin: 15px 12px 10px;
       text-transform: uppercase;
+      overflow-wrap: anywhere;
     }
 
     .card-details {
@@ -449,6 +534,13 @@
       border-bottom: 1px solid #ccc;
       text-align: left;
       font-size: 16px;
+      min-width: 0;
+    }
+
+    .card-detail-label,
+    .card-detail-value {
+      min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     .card-detail-label {
@@ -491,6 +583,7 @@
       letter-spacing: 3px;
       font-weight: 800;
       margin: 8px 10px 14px;
+      overflow-wrap: anywhere;
     }
 
     .card-bottom {
@@ -525,6 +618,7 @@
       margin-top: 18px;
       font-size: 17px;
       font-weight: 900;
+      overflow-wrap: anywhere;
     }
 
     .card-bottom-small {
@@ -539,7 +633,11 @@
     ========================= */
 
     .table-wrap {
+      width: 100%;
+      max-width: 100%;
       overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
     }
 
     table {
@@ -565,29 +663,115 @@
 
     @media (max-width: 800px) {
 
+      #loginScreen {
+        padding:
+          max(16px, env(safe-area-inset-left))
+          max(16px, env(safe-area-inset-right));
+      }
+
+      .login-box {
+        padding: 24px 18px;
+        border-radius: 15px;
+      }
+
+      .logo-text {
+        font-size: 34px;
+      }
+
+      .topbar {
+        height: 60px;
+        min-height: 60px;
+        padding:
+          0 12px;
+        gap: 8px;
+      }
+
+      .topbar-logo {
+        font-size: 17px;
+        line-height: 1.1;
+      }
+
+      .topbar-actions {
+        gap: 5px;
+      }
+
       .menu-btn {
         display: inline-block;
+        padding: 8px 9px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .topbar .btn-dark {
+        padding: 8px 9px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .layout {
+        display: block;
+        width: 100%;
+        min-width: 0;
       }
 
       .sidebar {
         position: fixed;
-        left: -250px;
-        top: 64px;
+        left: 0;
+        top: 60px;
         bottom: 0;
+        width: 250px;
+        max-width: 82vw;
+        height: calc(100vh - 60px);
+        height: calc(100dvh - 60px);
         z-index: 40;
-        transition: left .2s ease;
+        transform: translateX(-105%);
+        transition: transform .2s ease;
+        overflow-y: auto;
+        box-shadow: 8px 0 25px rgba(0,0,0,.25);
       }
 
       .sidebar.open {
         left: 0;
+        transform: translateX(0);
       }
 
       .main {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 16px 12px 30px;
+        margin: 0;
+        overflow-x: hidden;
+      }
+
+      .page-title {
+        font-size: 24px;
+        text-align: center;
+      }
+
+      .page-subtitle {
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .panel {
+        width: 100%;
         padding: 15px;
+        border-radius: 12px;
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .panel h2 {
+        font-size: 19px;
+        text-align: center;
       }
 
       .form-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
       }
 
       .full-width {
@@ -595,68 +779,171 @@
       }
 
       .success-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .actions {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .actions .btn {
+        width: 100%;
+        max-width: 420px;
+      }
+
+      /* Keep the ID card centred and proportional */
+      .id-card-container {
+        width: 100%;
+        padding: 12px 0 24px;
+        justify-content: center;
+        align-items: center;
       }
 
       .member-id-card {
+        width: min(100%, 360px);
+        max-width: 360px;
+        flex: 0 1 360px;
         border-radius: 14px;
       }
 
+      .card-orange-top {
+        height: 13px;
+      }
+
+      .card-logo-area {
+        padding: 13px 8px 3px;
+      }
+
       .card-logo {
-        font-size: 34px;
+        font-size: 31px;
+        letter-spacing: .5px;
       }
 
       .card-main-title {
-        font-size: 19px;
+        margin-top: 6px;
+        font-size: 17px;
       }
 
       .card-subtitle {
-        font-size: 10px;
+        font-size: 8px;
+        margin-top: 3px;
+        letter-spacing: .7px;
       }
 
       .card-photo-area {
         width: 180px;
         height: 180px;
-        margin-top: 12px;
+        max-width: 62%;
+        margin-top: 9px;
+        margin-bottom: 6px;
+        border-width: 3px;
+        border-radius: 9px;
       }
 
       .card-member-name {
-        font-size: 16px;
-        margin-top: 10px;
+        font-size: 14px;
+        line-height: 1.15;
+        margin: 7px 8px 5px;
       }
 
       .card-details {
-        width: 90%;
+        width: 86%;
+        max-width: none;
       }
 
       .card-detail {
-        font-size: 10px;
-        padding: 5px 0;
-        gap: 5px;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.25fr);
+        font-size: 8px;
+        gap: 4px;
+        padding: 4px 0;
+      }
+
+      .active-badge {
+        padding: 3px 7px;
+        font-size: 7px;
       }
 
       .card-qr {
-        width: 45px;
-        height: 45px;
-        margin: 6px auto;
+        width: 38px;
+        height: 38px;
+        margin: 4px auto;
+        font-size: 7px;
       }
 
       .card-tagline {
-        font-size: 7px;
+        font-size: 5px;
         letter-spacing: 1px;
-        margin-bottom: 8px;
+        margin: 4px 5px 5px;
       }
 
       .card-bottom {
-        height: 48px;
+        height: 38px;
+      }
+
+      .card-bottom::before {
+        top: -13px;
+        height: 23px;
       }
 
       .card-bottom-name {
-        font-size: 10px;
-        margin-top: 10px;
+        font-size: 7px;
+        margin-top: 8px;
       }
 
       .card-bottom-small {
+        font-size: 5px;
+        margin-top: 1px;
+      }
+
+      .table-wrap {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+      }
+
+      table {
+        min-width: 650px;
+      }
+    }
+
+    @media (max-width: 380px) {
+
+      .topbar {
+        padding: 0 8px;
+      }
+
+      .topbar-logo {
+        font-size: 15px;
+      }
+
+      .menu-btn,
+      .topbar .btn-dark {
+        padding: 7px 8px;
+        font-size: 11px;
+      }
+
+      .main {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+
+      .panel {
+        padding: 12px;
+      }
+
+      .member-id-card {
+        width: min(100%, 330px);
+        max-width: 330px;
+        flex-basis: 330px;
+      }
+
+      .card-photo-area {
+        width: 155px;
+        height: 155px;
+      }
+
+      .card-detail {
         font-size: 7px;
       }
     }
@@ -732,7 +1019,8 @@
         Membership
       </div>
 
-      <div>
+      <div class="topbar-actions">
+
         <button
           id="menuBtn"
           class="menu-btn"
@@ -748,6 +1036,7 @@
         >
           Logout
         </button>
+
       </div>
 
     </header>
@@ -2143,9 +2432,7 @@
         </div>
       `;
     }
-
-
-    /* =========================
+        /* =========================
        CREATE JPEG
     ========================= */
 
@@ -2201,13 +2488,6 @@
         height
       );
 
-
-      /*
-        Use the browser's built-in
-        SVG foreignObject rendering
-        to preserve the complete
-        centered card design.
-      */
 
       const serialized =
         new XMLSerializer()
@@ -2443,12 +2723,6 @@
         }
 
 
-        /*
-          Some phones/browsers do not allow
-          direct file sharing through the Web Share API.
-          In that case download the JPEG first.
-        */
-
         const url =
           URL.createObjectURL(
             jpeg
@@ -2586,6 +2860,7 @@
               <div class="card-details">
 
                 <div class="card-detail">
+
                   <div class="card-detail-label">
                     Membership Number
                   </div>
@@ -2597,10 +2872,12 @@
                   <div class="card-detail-value">
                     MBR-2026-XXXXXX
                   </div>
+
                 </div>
 
 
                 <div class="card-detail">
+
                   <div class="card-detail-label">
                     Card Number
                   </div>
@@ -2612,10 +2889,12 @@
                   <div class="card-detail-value">
                     CARD-2026-XXXXXXXX
                   </div>
+
                 </div>
 
 
                 <div class="card-detail">
+
                   <div class="card-detail-label">
                     Member Status
                   </div>
@@ -2625,10 +2904,13 @@
                   </div>
 
                   <div class="card-detail-value">
+
                     <span class="active-badge">
                       ACTIVE
                     </span>
+
                   </div>
+
                 </div>
 
               </div>
@@ -2688,7 +2970,7 @@
         </h1>
 
         <p class="page-subtitle">
-          Arkbridge 360 Global Trust Limited
+          ARKBRIDGE 360 GLOBAL TRUST LIMITED
         </p>
 
 
